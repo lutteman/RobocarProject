@@ -2,7 +2,7 @@ package carProject;
 
 public class PictureClient extends ClientClass {
 	
-	String pictureUrl;
+	String pictureUrl; //acceslevel på variablerna?
 	int identifier;
 	
 	public PictureClient() {
