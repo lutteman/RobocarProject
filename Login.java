@@ -113,6 +113,7 @@ public class Login {
 	 */
 	public void closeLogin() {
 		frame.setVisible(false);
+		//Kanske använda dispose() eller liknande för att förstöra Login efter lyckad inloggning?
 	}
 	
 }
