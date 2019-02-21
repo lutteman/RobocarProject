@@ -1,5 +1,7 @@
-package car.project;
 
+import com.googlecode.javacv.CanvasFrame;
+import com.googlecode.javacv.OpenCVFrameGrabber;
+import com.googlecode.javacv.cpp.opencv_core.IplImage;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -275,8 +277,8 @@ public class Display implements Observer {
 			rSpeed.setText(Integer.toString(c1.getRightValue()));
 			lSpeed.setText(Integer.toString(c1.getLeftValue()));
 
-		}
 
 	}
 
+}
 }
