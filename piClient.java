@@ -1,60 +1,46 @@
-package piCommunication;
 import java.net.*;
 import java.io.*;
-import java.util.*;
 
 
 
-public class piClient extends Thread{
-
-		private static final String ADDRESS = "127.0.0.1";
-		private static final String PORT = "9400";
-		private BufferedReader in;
-		private InetAddress toAddr;
-		private int toPort;
-		private DatagramSocket socket;
-		private Random rand;
-		
-		public piClient() throws UnknownHostException, SocketException {
-			in = new BufferedReader(new InputStreamReader(System.in));
-			toAddr = InetAddress.getByName(ADDRESS);
-			toPort = Integer.parseInt(PORT);
-			socket = new DatagramSocket();
-			rand = new Random();
-			
-			
-		}
-		
-		
-	public void sendIntPair(int i, int j) throws IOException{
-			StringBuilder sb = new StringBuilder();
-			sb.append(Integer.toString(i));
-			sb.append(",");
-			sb.append(Integer.toString(j));
-
-			
-			System.out.println("Int pair:");
-			String message = sb.toString();
-			byte[] data = message.getBytes();
-			socket.send(new DatagramPacket(data, data.length, toAddr, toPort));	
-		}
+public class piClient {
+	public static void main(String[] args) throws UnknownHostException,
+	SocketException,IOException
 	
-	public void run(){
+	{
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+		
+		InetAddress toAddr = InetAddress.getByName("192.168.137.103");
+		int toPort = Integer.parseInt("9400");
+		DatagramSocket socket = new DatagramSocket();
+		byte[] data;
 		while(true) {
-			try {
-				sleep(3000);
-				sendIntPair(rand.nextInt(100),rand.nextInt(100));
-			}catch(Exception e){
-				e.printStackTrace();
-				
+			System.out.println("?");
+			String message = in.readLine();
+			if(message == null) {
+				break;
 			}
 			
+			switch(message) {
+			case "w": data = ("9,9").getBytes();
+			break;
+			case "a": data = ("6,5").getBytes();
+			break;
+			case "s": data = ("4,4").getBytes();
+			break;
+			case "d": data = ("5,6").getBytes();
+			break;
+			case "e": data = ("9,1").getBytes();
+			break;
+			default: data = ("5,5").getBytes();
+			}
 			
+			socket.send(new DatagramPacket(data, data.length, toAddr, toPort));
 			
 		}
+		
 		
 		
 	}
-
 
 }
