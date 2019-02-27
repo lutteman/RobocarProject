@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
@@ -23,10 +24,25 @@ public class Display implements Observer {
 	private JLabel lSpeed;
 	private JButton wheels;
 	private JLabel lblLed;
+	private JFrame frame;
+	private JPanel imagePane;
 
-	public Display(CarModule c) {
+	//extension for ipstream
+	private IplImage iPimg;
+	private BufferedImage img;
+	private JLabel imageLabel;
+	private ImageIcon icon;
+	private OpenCVFrameGrabber frameGrabber;
+
+	public Display(CarModule c) throws Exception {
 		this.CarV = c;
 		loginObj = new Login();
+		icon = new ImageIcon();
+		mainFrame();
+		frameGrabber = new OpenCVFrameGrabber("http://192.168.137.103:8160");
+		frameGrabber.setFormat("mjpeg");
+		frameGrabber.start();
+		setupIpStream();
 	}
 
 	/**
@@ -34,12 +50,12 @@ public class Display implements Observer {
 	 * 
 	 */
 	public void mainFrame() {
-		JFrame frame = new JFrame();
+		frame = new JFrame();
 		JPanel mainPane = new JPanel(new BorderLayout());
 		frame.getContentPane().add(mainPane);
 
 		frame.setLocationRelativeTo(null);
-		frame.setResizable(false);
+		frame.setResizable(true);
 
 		mainPane.add(imagePanel(), BorderLayout.CENTER);
 		mainPane.add(keyPanel(), BorderLayout.SOUTH);
@@ -71,9 +87,13 @@ public class Display implements Observer {
 	 * @return a Panel
 	 */
 	public JPanel imagePanel() {
-		JPanel imagePane = new JPanel();
-		imagePane.setLayout(new FlowLayout(FlowLayout.CENTER, 150, 150));
-		imagePane.setBackground(Color.CYAN);
+		imagePane = new JPanel();
+		imageLabel = new JLabel();
+		imageLabel.setIcon(icon);
+		imagePane.add(imageLabel);
+		
+		//imagePane.setLayout(new FlowLayout(FlowLayout.CENTER, 150, 150));
+		//imagePane.setBackground(Color.CYAN);
 
 		return imagePane;
 	}
@@ -279,6 +299,22 @@ public class Display implements Observer {
 
 
 	}
-
+		
 }
+	
+	private void setupIpStream() throws Exception {
+		
+		while((iPimg = frameGrabber.grab()) != null) {
+			img = iPimg.getBufferedImage();
+			
+			icon.setImage(img);
+			imagePane.revalidate();
+			imagePane.repaint();
+			
+		}
+		
+		
+		
+	}
+
 }
