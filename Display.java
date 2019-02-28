@@ -26,25 +26,30 @@ public class Display implements Observer {
 	private JLabel lblLed;
 	private PiClient piclient;
 	
+	private PictureModule picMod;
+	private JPanel imagePanel;
+	private JLabel imageLabel;	
 
-	public Display(CarModule c, PiClient p, KeyboardListener k) {
+	public Display(CarModule c, PiClient p, KeyboardListener k, PictureModule pm) {
 		this.CarV = c;
 		this.piclient = p;
 		this.key = k;
+		this.picMod = pm;
 		loginObj = new Login();
 	}
 
 	/**
 	 * Creating the main frame, BorderLayout witch will contain 3 panels.
+	 * @throws Exception 
 	 * 
 	 */
-	public void mainFrame() {
+	public void mainFrame() throws Exception {
 		JFrame frame = new JFrame();
 		JPanel mainPane = new JPanel(new BorderLayout());
 		frame.getContentPane().add(mainPane);
 
 		frame.setLocationRelativeTo(null);
-		frame.setResizable(false);
+		frame.setResizable(true);
 
 		mainPane.add(imagePanel(), BorderLayout.CENTER);
 		mainPane.add(keyPanel(), BorderLayout.SOUTH);
@@ -67,7 +72,8 @@ public class Display implements Observer {
 
 		frame.pack();
 		frame.setVisible(true);
-
+		picMod.setupStream();
+		
 	}
 
 	/**
@@ -76,11 +82,11 @@ public class Display implements Observer {
 	 * @return a Panel
 	 */
 	public JPanel imagePanel() {
-		JPanel imagePane = new JPanel();
-		imagePane.setLayout(new FlowLayout(FlowLayout.CENTER, 150, 150));
-		imagePane.setBackground(Color.CYAN);
+		imagePanel = new JPanel();
+		imageLabel = new JLabel();
+		imagePanel.add(imageLabel);
 
-		return imagePane;
+		return imagePanel;
 	}
 
 	/**
@@ -305,6 +311,12 @@ public class Display implements Observer {
 				e.printStackTrace();
 				
 			}
+		}
+		else if(arg0 instanceof PictureModule) {
+			PictureModule pm = (PictureModule) arg1;
+			imageLabel.setIcon(pm.getIcon());
+			imagePanel.revalidate();
+			imagePanel.repaint();
 		}
 
 	}

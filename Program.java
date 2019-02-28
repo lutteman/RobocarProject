@@ -16,20 +16,28 @@ public class Program {
 	PiClient piClient;
 	Display runDisplay;
 	KeyboardListener key;
-	public Program() throws UnknownHostException, SocketException {
+	PictureModule picMod;
+	public Program() throws UnknownHostException, SocketException{
 		this.carMod = new CarModule();
 		this.piClient = new PiClient();
 		this.key = new KeyboardListener();
-		this.runDisplay = new Display(carMod,piClient,key);
+		try {
+		this.picMod = new PictureModule();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		this.runDisplay = new Display(carMod,piClient,key,picMod);
 	}
 	/**
 	 * The run method for the program.
+	 * @throws Exception 
 	 *
 	 */
 	
-	public void run() {
+	public void run() throws Exception {
 	carMod.addObserver(runDisplay);
 	key.addObserver(runDisplay);
+	picMod.addObserver(runDisplay);
 	runDisplay.mainFrame();
 	}
 }
