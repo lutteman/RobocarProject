@@ -1,13 +1,8 @@
-
-
-import com.googlecode.javacv.CanvasFrame;
-import com.googlecode.javacv.OpenCVFrameGrabber;
-import com.googlecode.javacv.cpp.opencv_core.IplImage;
+package project;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
@@ -21,37 +16,33 @@ import java.util.Observer;
 public class Display implements Observer {
 	private Login loginObj;
 	private CarModule CarV;
+	private PictureModule picMod;
+	private KeyboardListener key;
 	private JLabel rSpeed;
 	private JLabel lSpeed;
 	private JButton wheels;
 	private JLabel lblLed;
-	private JFrame frame;
-	private JPanel imagePane;
-
-	//extension for ipstream
-	private IplImage iPimg;
-	private BufferedImage img;
+	private PiClient piclient;
+	
+	private JPanel imagePanel;
 	private JLabel imageLabel;
-	private ImageIcon icon;
-	private OpenCVFrameGrabber frameGrabber;
+	
 
-	public Display(CarModule c) throws Exception {
+	public Display(CarModule c, PiClient p, KeyboardListener k, PictureModule pm) {
 		this.CarV = c;
+		this.piclient = p;
+		this.key = k;
+		this.picMod = pm;
 		loginObj = new Login();
-		icon = new ImageIcon();
-		mainFrame();
-		frameGrabber = new OpenCVFrameGrabber("http://192.168.137.103:8160");
-		frameGrabber.setFormat("mjpeg");
-		frameGrabber.start();
-		setupIpStream();
 	}
 
 	/**
 	 * Creating the main frame, BorderLayout witch will contain 3 panels.
+	 * @throws Exception 
 	 * 
 	 */
-	public void mainFrame() {
-		frame = new JFrame();
+	public void mainFrame() throws Exception {
+		JFrame frame = new JFrame();
 		JPanel mainPane = new JPanel(new BorderLayout());
 		frame.getContentPane().add(mainPane);
 
@@ -79,6 +70,7 @@ public class Display implements Observer {
 
 		frame.pack();
 		frame.setVisible(true);
+		picMod.setupStream();
 
 	}
 
@@ -88,15 +80,11 @@ public class Display implements Observer {
 	 * @return a Panel
 	 */
 	public JPanel imagePanel() {
-		imagePane = new JPanel();
+		imagePanel = new JPanel();
 		imageLabel = new JLabel();
-		imageLabel.setIcon(icon);
-		imagePane.add(imageLabel);
+		imagePanel.add(imageLabel);
 		
-		//imagePane.setLayout(new FlowLayout(FlowLayout.CENTER, 150, 150));
-		//imagePane.setBackground(Color.CYAN);
-
-		return imagePane;
+		return imagePanel;
 	}
 
 	/**
@@ -267,11 +255,11 @@ public class Display implements Observer {
 	/**
 	 * Method for sending event from button pressed to CarModule class.
 	 * @param e
+	 * @throws Exception 
 	 */
 	public void keyListener(ActionEvent e) {
 		if (e.getActionCommand() == "w") {
-			CarV.forward();
-
+			CarV.forward();	
 		}
 		if (e.getActionCommand() == "s") {
 			CarV.backward();
@@ -294,28 +282,36 @@ public class Display implements Observer {
 
 		if (arg0 instanceof CarModule) {
 			CarModule c1 = (CarModule) arg1;
+				try {
+					piclient.sendIntPair((c1.getLeftValue()),c1.getRightValue());
+				}catch(Exception e){
+					e.printStackTrace();
+					
+				}			
 
 			rSpeed.setText(Integer.toString(c1.getRightValue()));
 			lSpeed.setText(Integer.toString(c1.getLeftValue()));
 
-
-	}
-		
-}
-	
-	private void setupIpStream() throws Exception {
-		
-		while((iPimg = frameGrabber.grab()) != null) {
-			img = iPimg.getBufferedImage();
+		}
+		else if(arg0 instanceof KeyboardListener) {
+			KeyboardListener k1 = (KeyboardListener) arg1;
+			try {
+				piclient.sendIntPair((k1.getLeftValue()),k1.getRightValue());
+			}catch(Exception e){
+				e.printStackTrace();
+				
+			}
+		}
+		else if(arg0 instanceof PictureModule ) {
+			PictureModule pm = (PictureModule) arg1;
+			imageLabel.setIcon(pm.getIcon());
+			imagePanel.revalidate();
+			imagePanel.repaint();
+			System.out.println("update method");
 			
-			icon.setImage(img);
-			imagePane.revalidate();
-			imagePane.repaint();
 			
 		}
-		
-		
-		
+
 	}
 
 }

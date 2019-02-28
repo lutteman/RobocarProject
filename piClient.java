@@ -1,46 +1,46 @@
+package project;
 import java.net.*;
 import java.io.*;
+import java.util.*;
 
+public class PiClient {
 
-
-public class piClient {
-	public static void main(String[] args) throws UnknownHostException,
-	SocketException,IOException
+	private static final String ADDRESS = "192.168.137.103";
+	private static final String PORT = "9400";
+	private BufferedReader in;
+	private InetAddress toAddr;
+	private int toPort;
+	private DatagramSocket socket;
 	
-	{
-		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-		
-		InetAddress toAddr = InetAddress.getByName("192.168.137.103");
-		int toPort = Integer.parseInt("9400");
-		DatagramSocket socket = new DatagramSocket();
-		byte[] data;
-		while(true) {
-			System.out.println("?");
-			String message = in.readLine();
-			if(message == null) {
-				break;
-			}
-			
-			switch(message) {
-			case "w": data = ("9,9").getBytes();
-			break;
-			case "a": data = ("6,5").getBytes();
-			break;
-			case "s": data = ("4,4").getBytes();
-			break;
-			case "d": data = ("5,6").getBytes();
-			break;
-			case "e": data = ("9,1").getBytes();
-			break;
-			default: data = ("5,5").getBytes();
-			}
-			
-			socket.send(new DatagramPacket(data, data.length, toAddr, toPort));
-			
-		}
-		
-		
-		
+	/**
+	 * Constructs the PiClient to be used for sending information the the pi
+	 * 
+	 * @throws UnknownHostException
+	 * @throws SocketException
+	 */
+	public PiClient() throws UnknownHostException, SocketException {
+		in = new BufferedReader(new InputStreamReader(System.in));
+		toAddr = InetAddress.getByName(ADDRESS);
+		toPort = Integer.parseInt(PORT);
+		socket = new DatagramSocket();
 	}
-
+	
+	/**
+	 * Creates a string with the information to be sent to the pi
+	 * 
+	 * @param i a value of speed to be sent to the pi
+	 * @param j a value of speed to be sent to the pi
+	 * @throws IOException
+	 */
+	public void sendIntPair(int i, int j) throws IOException {
+		StringBuilder sb = new StringBuilder();
+		sb.append(Integer.toString(i));
+		sb.append(",");
+		sb.append(Integer.toString(j));
+		//test string to the what values are about to be sent
+		System.out.println("Int pair: " + (i) + " " + (j));
+		String message = sb.toString();
+		byte[] data = message.getBytes();
+		socket.send(new DatagramPacket(data, data.length, toAddr, toPort));
+	}
 }

@@ -1,23 +1,18 @@
-
+package project;
 
 import java.util.Observable;
 
-public class CarModule extends Observable{
+public class CarModule extends Observable {
 	int left;
 	int right;
-	int step;
-	int limit;
-	int identifier;
-
-	public CarModule() {
-		this.left = 0;
-		this.right = 0;
-		this.step = 1;
-		this.limit = 10;
-		//Identifier so that server will know what type of class it is
-		this.identifier = 1;
-	}
 	
+	/*
+	 * Constructs a CarModule object
+	 */
+	public CarModule() {
+		this.left = 5;
+		this.right = 5;
+	}
 
 	/**
 	 * 
@@ -26,6 +21,7 @@ public class CarModule extends Observable{
 	public int getLeftValue() {
 		return this.left;
 	}
+
 	/**
 	 * 
 	 * @return value to be sent to the right motor
@@ -33,62 +29,68 @@ public class CarModule extends Observable{
 	public int getRightValue() {
 		return this.right;
 	}
-	
+
 	/**
 	 * Updates values to represent a forward movement
 	 */
 	public void forward() {
-		this.left += step;
-		this.right += step;
-		if (this.left > limit)
-			this.left = limit;
-		if (this.right >= limit)
-			this.right = limit;
-		
-		changeIsGonnaCome();
+		if (this.left == 6 && this.left == 6) {
+			this.left = 9;
+			this.right = 9;
+		} else if (this.left == 5 && this.right == 5) {
+			this.left = 6;
+			this.right = 6;
+		} else {
+			this.left = 5;
+			this.right = 5;
+		}
+		sendValues();
 	}
+
 	/**
 	 * Updates values to represent a backward movement
 	 */
 	public void backward() {
-		this.left += -step;
-		this.right += -step;
-		if (this.left < -limit)
-			this.left = -limit;
-		if (this.right <= -limit)
-			this.right = -limit;
-		
-		changeIsGonnaCome();
+		if (this.left == 5 && this.right == 5) {
+			this.left = 3;
+			this.right = 3;
+		} else if (this.left == 3 && this.right == 3) {
+			this.left = 1;
+			this.right = 1;
+		} else {
+			this.left = 5;
+			this.right = 5;
+		}
+		sendValues();
+
 	}
+
 	/**
 	 * Updates values to represent a right movement
 	 */
 	public void right() {
-		this.left += -step;
-		this.right += step;
-		if(this.left < -limit)
-			this.left = -limit;
-		if(this.right > limit)
-			this.right = limit;
-		
-		changeIsGonnaCome();
+		this.left = 8;
+		this.right = 3;
+		sendValues();
+		this.left = 5;
+		this.right = 5;
 	}
+
 	/**
 	 * Updates values to represent a left movement
 	 */
 	public void left() {
-		this.left += step;
-		this.right += -step;
-		if(this.left > limit)
-			this.left = limit;
-		if(this.right < -limit)
-			this.right = -limit;
-		
-		changeIsGonnaCome();
+		this.right = 8;
+		this.left = 3;
+		sendValues();
+		this.right = 5;
+		this.left = 5;
+
 	}
-	public void changeIsGonnaCome() {
+
+	public void sendValues() {
 		setChanged();
 		notifyObservers(this);
-		
+
 	}
 }
