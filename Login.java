@@ -1,119 +1,55 @@
-package carProject;
+package car.project;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class Login {
-	private JFrame frame;
-	private JTextField user;
-	private JPasswordField password;
-	private JLabel username;
-	private JLabel userpassword;
-	private JButton loginbutton;
-
-	public Login() {
-	}
-
-	public void login() {
-		createLoginFrame();
-	}
 
 	/**
 	 * 
-	 *	Creates the LoginFrame, that is used for user input
-	 *	of username and password
+	 * Method for finding the password for a User.
+	 * 
+	 * @param s is the inputed User we are searching its password for.
+	 * @return password if found else null
+	 * @throws IOException
 	 */
-	private void createLoginFrame() {
-		JPanel panel = new JPanel(new GridBagLayout());
-		GridBagConstraints gb = new GridBagConstraints();
-		gb.fill = GridBagConstraints.HORIZONTAL;
+	public String getPwforUser(String s) throws IOException {
+		String csvFile = "C:\\Users\\anton\\Desktop\\testcred3.csv";
+		BufferedReader br = null;
+		String line = "";
 
-		username = new JLabel("Username: ");
-		gb.gridx = 0;
-		gb.gridy = 0;
-		gb.gridwidth = 1;
-		panel.add(username, gb);
+		try {
+			br = new BufferedReader(new FileReader(csvFile));
+			while ((line = br.readLine()) != null) {
 
-		user = new JTextField(20);
-		gb.gridx = 1;
-		gb.gridy = 0;
-		gb.gridwidth = 2;
-		panel.add(user, gb);
+				String[] text = line.split(",");
 
-		userpassword = new JLabel("Password: ");
-		gb.gridx = 0;
-		gb.gridy = 1;
-		gb.gridwidth = 1;
-		panel.add(userpassword, gb);
-
-		password = new JPasswordField(20);
-		gb.gridx = 1;
-		gb.gridy = 1;
-		gb.gridwidth = 2;
-		panel.add(password, gb);
-
-		loginbutton = new JButton("Login");
-		
-		// An action listener is added to react when a user is done
-		// with their input and presses enter or the login button
-		loginbutton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(checkCredentials(getUsername(), getPassword())) {
-					System.out.println("Correct Password!");
-					closeLogin();
-				} else {
-					System.out.println("Wrong Password! Try Again");
+				if (text[0].contentEquals(s)) {
+					return text[1];
 				}
 			}
-		});
-		
-		JPanel panel2 = new JPanel();
-		panel2.add(loginbutton);
-		JPanel panel3 = new JPanel();
-		panel3.setLayout(new FlowLayout());
-		panel3.add(panel);
-		panel3.add(panel2);
-		frame = new JFrame("Login to application");
-		frame.add(panel3);
-		frame.getRootPane().setDefaultButton(loginbutton);
-		frame.pack();
-		frame.setVisible(true);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		br.close();
+		return null;
 	}
 
 	/**
-	 * 
-	 * @return username as a String
-	 */
-
-	private String getUsername() {
-		return user.getText().trim();
-	}
-
-	/**
-	 * 
-	 * @return password as a String
-	 */
-	private String getPassword() {
-		return new String(password.getPassword());
-	}
-
-	/**
+	 * A method for checking that the entered password for a user is the same as the
+	 * password in the csv file.
 	 *
-	 * @param user
-	 * @param password
+	 * @param pwInput is the user inputed password
+	 * @param pwFile  is the found password for the user
 	 * @return the result of the credentials check
 	 */
-	private boolean checkCredentials(String user, String password) {
-		return (user.equals("user") && password.equals("password"));
-		
+	public boolean checkCredentials(String pwInput, String pwFile) {
+		return (pwInput.equals(pwFile));
+
 	}
-	/**
-	 * Closes the frame window
-	 */
-	public void closeLogin() {
-		frame.setVisible(false);
-		//Kanske använda dispose() eller liknande för att förstöra Login efter lyckad inloggning?
-	}
-	
+
 }

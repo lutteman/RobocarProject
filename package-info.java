@@ -1,8 +1,5 @@
 /**
- * 
- */
-/**
- * @author lutteman
+ * @author anton
  *
  */
-package carProject;
+package car.project;
