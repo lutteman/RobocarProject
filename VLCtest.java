@@ -10,7 +10,7 @@ public class VLCtest {
     
 
 public static void main(String[] args) throws Exception {
-OpenCVFrameGrabber frameGrabber = new OpenCVFrameGrabber("http://192.168.137.75:8160"); 
+OpenCVFrameGrabber frameGrabber = new OpenCVFrameGrabber("http://192.168.137.103:8160"); 
     frameGrabber.setFormat("mjpeg");
     frameGrabber.start();
     IplImage iPimg = frameGrabber.grab();
@@ -25,7 +25,7 @@ OpenCVFrameGrabber frameGrabber = new OpenCVFrameGrabber("http://192.168.137.75:
     	    }catch(Exception e) {
     	    System.out.println("catched");
     	    try {
-    	    	  frameGrabber = new OpenCVFrameGrabber("http://192.168.137.75:8160"); 
+    	    	  frameGrabber = new OpenCVFrameGrabber("http://192.168.137.103:8160"); 
     	    	    frameGrabber.setFormat("mjpeg");
     	    	    frameGrabber.start();
     	    	    iPimg = frameGrabber.grab();
