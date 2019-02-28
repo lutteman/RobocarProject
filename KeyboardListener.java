@@ -1,25 +1,42 @@
 package car.project;
 
+/**
+ * 
+ * @author Mehdi Vahid
+ * @author Anton Lutteman
+ * @version 2019-02-28
+ *
+ */
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Observable;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 
 
 public class KeyboardListener extends Observable implements KeyListener{
-	JTextField jft;
+	JButton button;
 	int left;
 	int right;
 	public KeyboardListener() {
-		jft = new JTextField();
-		jft.addKeyListener(this);
-		JFrame jf = new JFrame();
-		jf.add(jft);
-		jf.pack();
-		jf.setVisible(true);
+		
+	}
+	
+	/**
+	 * The method for setting up and returning the button for manual driving
+	 * 
+	 * @return A JButton with a keyListener connected to it
+	 */
+	
+	public JButton createButton(){
+		button = new JButton("Manual");
+		button.addKeyListener(this);
+		return button;
 	}
 	
 	@Override
@@ -35,20 +52,19 @@ public class KeyboardListener extends Observable implements KeyListener{
 		// TODO Auto-generated method stub
 		int id = arg0.getKeyCode();
 		EndID(id);
-		
 	}
 
 	
 	
 	
 	@Override
-	public void keyTyped(KeyEvent arg0) {
+    public void keyTyped(KeyEvent arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 	
 	private void StartID(int i) {
-		
+	
 		if (i == 37 && (right != 7 && left !=3)) {
 			this.right = 7;
 			this.left = 3;
@@ -89,8 +105,4 @@ public class KeyboardListener extends Observable implements KeyListener{
 	public int getLeftValue() {
 		return this.left;
 	}
-	
-	
-	
-	
 }

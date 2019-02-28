@@ -1,5 +1,15 @@
 package car.project;
 
+/**
+ * 
+ * 
+ * @author Anton Lutteman
+ * @version 2019-02-28
+ *
+ */
+
+
+
 import java.util.Observable;
 
 public class CarModule extends Observable {
@@ -88,7 +98,10 @@ public class CarModule extends Observable {
 
 	}
 
-	public void sendValues() {
+	/**
+	 * Notifies Display that the car module has been changed
+	 */
+	private void sendValues() {
 		setChanged();
 		notifyObservers(this);
 

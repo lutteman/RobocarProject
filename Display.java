@@ -10,8 +10,9 @@ import java.util.Observer;
 
 /**
  * 
- * 
- * @author Christopher
+ * @author Christopher 
+ * @author Anton Lutteman
+ * @version 2019-02-28
  *
  */
 public class Display implements Observer {
@@ -21,8 +22,10 @@ public class Display implements Observer {
 	private JLabel rSpeed;
 	private JLabel lSpeed;
 	private JButton wheels;
+	private JButton manual;
 	private JLabel lblLed;
 	private PiClient piclient;
+	
 
 	public Display(CarModule c, PiClient p, KeyboardListener k) {
 		this.CarV = c;
@@ -93,15 +96,22 @@ public class Display implements Observer {
 		keyPane.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 
-		wheels = new JButton("w");
+		wheels = new JButton("Forward");
 		c.weightx = 0.5;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 1;
 		c.gridy = 0;
 		keyPane.add(wheels, c);
 		wheels.addActionListener(e -> keyListener(e));
+		
+		manual = key.createButton();
+		c.weightx = 0.5;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 2;
+		c.gridy = 0;
+		keyPane.add(manual, c);
 
-		wheels = new JButton("s");
+		wheels = new JButton("Back");
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 0.5;
 		c.gridx = 1;
@@ -109,7 +119,7 @@ public class Display implements Observer {
 		keyPane.add(wheels, c);
 		wheels.addActionListener(e -> keyListener(e));
 
-		wheels = new JButton("a");
+		wheels = new JButton("Left");
 		c.weightx = 0.5;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
@@ -117,7 +127,7 @@ public class Display implements Observer {
 		keyPane.add(wheels, c);
 		wheels.addActionListener(e -> keyListener(e));
 
-		wheels = new JButton("d");
+		wheels = new JButton("Right");
 		c.weightx = 0.5;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 2;
@@ -161,6 +171,8 @@ public class Display implements Observer {
 
 	/**
 	 * Creating a login frame
+	 * @author Anton Lutteman
+	 * 
 	 */
 	public void createLoginFrame() {
 
@@ -170,7 +182,6 @@ public class Display implements Observer {
 		JLabel username;
 		JLabel userpassword;
 		JButton loginbutton;
-
 		JPanel panel = new JPanel(new GridBagLayout());
 		GridBagConstraints gb = new GridBagConstraints();
 		gb.fill = GridBagConstraints.HORIZONTAL;
@@ -247,20 +258,20 @@ public class Display implements Observer {
 	
 	/**
 	 * Method for sending event from button pressed to CarModule class.
-	 * @param e
+	 * @param e the buttons actionevent
 	 */
 	public void keyListener(ActionEvent e) {
-		if (e.getActionCommand() == "w") {
+		if (e.getActionCommand() == "Forward") {
 			CarV.forward();
 
 		}
-		if (e.getActionCommand() == "s") {
+		if (e.getActionCommand() == "Back") {
 			CarV.backward();
 		}
-		if (e.getActionCommand() == "a") {
+		if (e.getActionCommand() == "Left") {
 			CarV.left();
 		}
-		if (e.getActionCommand() == "d") {
+		if (e.getActionCommand() == "Right") {
 			CarV.right();
 		}
 
