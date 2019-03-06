@@ -7,6 +7,12 @@ import java.awt.event.ActionEvent;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+/**
+ * 
+ * @author Christopher Höglind
+ * @version 2019-03-06
+ */
+
 public class keyPanel extends JPanel {
 CarModule CarV;
 KeyboardListener key;

@@ -2,7 +2,6 @@ package car.project;
 
 /**
  * 
- * 
  * @author Anton Lutteman
  * @version 2019-02-28
  *
@@ -11,13 +10,18 @@ package car.project;
 
 
 import java.util.Observable;
-
+/**
+ * CarModule Object extends observable.
+ * Is used for handling values of movement of the motors.
+ * Notifies it observer after a change has been made.
+ */
 public class CarModule extends Observable {
-	int left;
-	int right;
+	private int left;
+	private int right;
 	
-	/*
-	 * Constructs a CarModule object
+	/**
+	 * Setting up a CarModule object with default values
+	 * 5 being the default value for not moving
 	 */
 	public CarModule() {
 		this.left = 5;
@@ -25,7 +29,7 @@ public class CarModule extends Observable {
 	}
 
 	/**
-	 * 
+	 * Method for accessing left motor value
 	 * @return value to be sent to the left motor
 	 */
 	public int getLeftValue() {
@@ -33,7 +37,7 @@ public class CarModule extends Observable {
 	}
 
 	/**
-	 * 
+	 * Method for accessing right motor value
 	 * @return value to be sent to the right motor
 	 */
 	public int getRightValue() {

@@ -12,11 +12,11 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 
 public class Program {
-	CarModule carMod;
-	PiClient piClient;
-	Display runDisplay;
-	KeyboardListener key;
-	PictureModule picMod;
+	private CarModule carMod;
+	private PiClient piClient;
+	private Display runDisplay;
+	private KeyboardListener key;
+	private PictureModule picMod;
 	public Program() throws UnknownHostException, SocketException{
 		this.carMod = new CarModule();
 		this.piClient = new PiClient();

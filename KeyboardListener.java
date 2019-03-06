@@ -1,11 +1,7 @@
 package car.project;
-
 /**
- * 
  * @author Mehdi Vahid
- * @author Anton Lutteman
  * @version 2019-02-28
- *
  */
 
 import java.awt.event.KeyEvent;
@@ -20,9 +16,9 @@ import javax.swing.JTextField;
 
 
 public class KeyboardListener extends Observable implements KeyListener{
-	JButton button;
-	int left;
-	int right;
+	private JButton button;
+	private int left;
+	private int right;
 	public KeyboardListener() {
 		
 	}
@@ -34,19 +30,27 @@ public class KeyboardListener extends Observable implements KeyListener{
 	 */
 	
 	public JButton createButton(){
-		button = new JButton("Manual");
+		button = new JButton("Key control");
 		button.addKeyListener(this);
 		return button;
 	}
-	
+	/**
+	 * Metod that handles key press
+	 * 
+	 * @param arg0 is a key
+	 */
 	@Override
 	public void keyPressed(KeyEvent arg0) {
-		// TODO Auto-generated method stub
+		
 		int id = arg0.getKeyCode();
 		StartID(id);
-		//Vänster37 upp höger ner
+		
 	}
-
+	/**
+	 * Metod that handles key release
+	 * 
+	 * @param arg0 is a key
+	 */
 	@Override
 	public void keyReleased(KeyEvent arg0) {
 		// TODO Auto-generated method stub
@@ -55,14 +59,17 @@ public class KeyboardListener extends Observable implements KeyListener{
 	}
 
 	
-	
-	
+	/**
+	 * Default method, does nothing in our case
+	 */
 	@Override
     public void keyTyped(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-		
 	}
-	
+	/**
+	 * Method for checking what key is being pressed
+	 * 
+	 * @param i is the number of a key
+	 */
 	private void StartID(int i) {
 	
 		if (i == 37 && (right != 7 && left !=3)) {
@@ -86,7 +93,10 @@ public class KeyboardListener extends Observable implements KeyListener{
 			SetUpdated();
 		}
 	}
-	
+	/**
+	 * Method for checking the key to release it
+	 * @param i is a number of a key
+	 */
 	private void EndID(int i) {
 		if (i == 37 || i == 38 || i == 39 || i == 40) {
 			this.right = 5;
@@ -95,14 +105,24 @@ public class KeyboardListener extends Observable implements KeyListener{
 		SetUpdated();
 	}
 	
-	
+	/**
+	 * Method for notifying observers
+	 */
 	private void SetUpdated() {
 		setChanged();
 		notifyObservers(this);
 	}
+	/**
+	 * Method for returning right value
+	 * @return right value
+	 */
 	public int getRightValue() {
 		return this.right;
 	}
+	/**
+	 * Method for returning left value
+	 * @return left value
+	 */
 	public int getLeftValue() {
 		return this.left;
 	}

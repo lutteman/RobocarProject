@@ -1,5 +1,12 @@
 package car.project;
 
+/**
+ * 
+ * @author Christopher Höglind
+ * @author Anton Lutteman
+ * @version 2019-02-28
+ *
+ */
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -9,13 +16,13 @@ import java.util.Observable;
 import java.util.Observer;
 
 /**
- * 
- * @author Christopher 
- * @author Anton Lutteman
- * @version 2019-02-28
- *
+ * Display Object implements observer Used to create and update the GUI Observes.
+ * objects and handles changes of the observed objects. Changes made from user.
+ * input, pictures received from the server.
  */
 public class Display implements Observer {
+	private boolean loggedin;
+
 	private Login loginObj;
 	private CarModule CarV;
 	private KeyboardListener key;
@@ -27,11 +34,20 @@ public class Display implements Observer {
 	private PiClient piclient;
 	// nya classer för att rensa i displayklassen
 	private keyPanel keyP;
-	
+
 	private PictureModule picMod;
 	private JPanel imagePanel;
-	private JLabel imageLabel;	
+	private JLabel imageLabel;
 
+	/**
+	 * Connects the objects observed by and called upon by the display object
+	 * Creates a keyPanel object, and login object
+	 * 
+	 * @param c  (required) CarModule Object connected to the display
+	 * @param p  (required) PiClient Object connected to the display
+	 * @param k  (required) KeyboardListener Object connected to the display
+	 * @param pm (required) PictureModule Object connected to the display
+	 */
 	public Display(CarModule c, PiClient p, KeyboardListener k, PictureModule pm) {
 		this.CarV = c;
 		this.piclient = p;
@@ -39,14 +55,14 @@ public class Display implements Observer {
 		this.picMod = pm;
 		this.keyP = new keyPanel(this.CarV, this.key);
 		loginObj = new Login();
+		loggedin = false;
 	}
 
 	/**
 	 * Creating the main frame, BorderLayout witch will contain 3 panels.
-	 * @throws Exception 
 	 * 
 	 */
-	public void mainFrame() throws Exception {
+	public void mainFrame() {
 		JFrame frame = new JFrame();
 		JPanel mainPane = new JPanel(new BorderLayout());
 		frame.getContentPane().add(mainPane);
@@ -67,17 +83,22 @@ public class Display implements Observer {
 		loginScreen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				createLoginFrame();
-				// loginPanel();
 			}
 		});
+		menuBar.add(createInfoMenu());
+		
 		// test 1 end
 
 		frame.pack();
 		frame.setVisible(true);
 		frame.setSize(800, 600);
 		frame.setResizable(true);
-		picMod.setupStream();
-		
+		try {
+			picMod.setupStream();
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 
 	/**
@@ -85,7 +106,7 @@ public class Display implements Observer {
 	 * 
 	 * @return a Panel
 	 */
-	public JPanel imagePanel() {
+	private JPanel imagePanel() {
 		imagePanel = new JPanel();
 		imageLabel = new JLabel();
 		imagePanel.add(imageLabel);
@@ -93,6 +114,24 @@ public class Display implements Observer {
 		return imagePanel;
 	}
 
+	/**
+	 * 
+	 * @return a menu item with info option
+	 */
+	public JMenu createInfoMenu() {
+		JMenu menu = new JMenu("Info");
+		JMenuItem readme = new JMenuItem("Read me");
+		menu.add(readme);
+		readme.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(null, "Click “login” in the menu and enter your credentials. \r\n" + 
+						"You will then be able to see the live stream from the robot and operate it using the mouse or by clicking “Key control” use the arrow keys.",
+						"Read me",
+						JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
+		return menu;
+	}
 
 	/**
 	 * Creates a Panel with GridLayout for displaying the information about
@@ -100,7 +139,7 @@ public class Display implements Observer {
 	 * 
 	 * @return a Panel
 	 */
-	public JPanel infoPanel1() {
+	private JPanel infoPanel1() {
 		JPanel infoPane = new JPanel(new GridLayout(3, 2));
 
 		JLabel connectText = new JLabel("Connected: ");
@@ -127,10 +166,9 @@ public class Display implements Observer {
 
 	/**
 	 * Creating a login frame
-	 * @author Anton Lutteman
 	 * 
 	 */
-	public void createLoginFrame() {
+	private void createLoginFrame() {
 
 		JFrame loginFrame = new JFrame("Login to application");
 		JTextField user;
@@ -184,9 +222,9 @@ public class Display implements Observer {
 				}
 
 				if (loginObj.checkCredentials(pwInput, pwFile)) {
-
 					lblLed.setForeground(Color.GREEN);
 					loginFrame.dispose();
+					loggedin = true;
 
 				} else {
 					JOptionPane errorPane = new JOptionPane();
@@ -211,12 +249,12 @@ public class Display implements Observer {
 		loginFrame.setVisible(true);
 	}
 
-	
 	/**
 	 * Method for sending event from button pressed to CarModule class.
+	 * 
 	 * @param e the buttons actionevent
 	 */
-	public void keyListener(ActionEvent e) {
+	private void keyListener(ActionEvent e) {
 		if (e.getActionCommand() == "Forward") {
 			CarV.forward();
 
@@ -234,43 +272,45 @@ public class Display implements Observer {
 	}
 
 	/**
-	 * Update method witch is called from CarModule class with a notifyObserver.
-	 * It updates the speed values in the infoPane.
+	 * Update method for the Observer Handles changes on the CarModule object by
+	 * sending values to the PiClient and updating the GUI Handles changes on the
+	 * KeyboardListener object by sending values to the PiClient and updating the
+	 * GUI Handles changes on the PictureModule object by updating the GUI with a
+	 * new picture
 	 */
 	@Override
 	public void update(Observable arg0, Object arg1) {
-
-		if (arg0 instanceof CarModule) {
-			CarModule c1 = (CarModule) arg1;
+		if (loggedin == true) {
+			if (arg0 instanceof CarModule) {
+				CarModule c1 = (CarModule) arg1;
 				try {
-					piclient.sendIntPair((c1.getLeftValue()),c1.getRightValue());
-				}catch(Exception e){
+					piclient.sendIntPair((c1.getLeftValue()), c1.getRightValue());
+				} catch (Exception e) {
 					e.printStackTrace();
-					
-				}			
 
-			rSpeed.setText(Integer.toString(c1.getRightValue()));
-			lSpeed.setText(Integer.toString(c1.getLeftValue()));
+				}
 
-		}
-		else if(arg0 instanceof KeyboardListener) {
-			KeyboardListener k1 = (KeyboardListener) arg1;
-			try {
-				piclient.sendIntPair((k1.getLeftValue()),k1.getRightValue());
-			}catch(Exception e){
-				e.printStackTrace();
-				
+				rSpeed.setText(Integer.toString(c1.getRightValue()));
+				lSpeed.setText(Integer.toString(c1.getLeftValue()));
+
+			} else if (arg0 instanceof KeyboardListener) {
+				KeyboardListener k1 = (KeyboardListener) arg1;
+				try {
+					piclient.sendIntPair((k1.getLeftValue()), k1.getRightValue());
+				} catch (Exception e) {
+					e.printStackTrace();
+
+				}
+				rSpeed.setText(Integer.toString(k1.getRightValue()));
+				lSpeed.setText(Integer.toString(k1.getLeftValue()));
+			} else if (arg0 instanceof PictureModule) {
+				PictureModule pm = (PictureModule) arg1;
+				imageLabel.setIcon(pm.getIcon());
+				imagePanel.revalidate();
+				imagePanel.repaint();
 			}
-			rSpeed.setText(Integer.toString(k1.getRightValue()));
-			lSpeed.setText(Integer.toString(k1.getLeftValue()));
-		}
-		else if(arg0 instanceof PictureModule) {
-			PictureModule pm = (PictureModule) arg1;
-			imageLabel.setIcon(pm.getIcon());
-			imagePanel.revalidate();
-			imagePanel.repaint();
-		}
 
+		}
 	}
 
 }

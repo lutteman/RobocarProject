@@ -15,7 +15,7 @@ import java.util.*;
 
 public class PiClient {
 
-	private static final String ADDRESS = "192.168.137.103";
+	private static final String ADDRESS = "192.168.137.75";
 	private static final String PORT = "9400";
 	private BufferedReader in;
 	private InetAddress toAddr;
@@ -47,8 +47,6 @@ public class PiClient {
 		sb.append(Integer.toString(i));
 		sb.append(",");
 		sb.append(Integer.toString(j));
-		//test string to the what values are about to be sent
-		System.out.println("Int pair: " + (i) + " " + (j));
 		String message = sb.toString();
 		byte[] data = message.getBytes();
 		socket.send(new DatagramPacket(data, data.length, toAddr, toPort));

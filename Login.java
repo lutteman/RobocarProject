@@ -1,7 +1,7 @@
 package car.project;
 
 /**
- * @author Christopher
+ * @author Christopher Höglind
  * @version 2019-02-20
  *
  */

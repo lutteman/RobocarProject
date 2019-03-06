@@ -5,7 +5,6 @@ package car.project;
  * 
  */
 
-
 import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
@@ -20,31 +19,36 @@ public class PiClientStream {
 	private BufferedImage img;
 	private ImageIcon icon;
 	private OpenCVFrameGrabber frameGrabber;
-	
+
 	public PiClientStream() {
-		frameGrabber = new OpenCVFrameGrabber("http://192.168.137.103:8160");
+		frameGrabber = new OpenCVFrameGrabber("http://192.168.137.75:8160");
 		frameGrabber.setFormat("mjpeg");
 		icon = new ImageIcon();
 		try {
 			frameGrabber.start();
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		
-		
+
 	}
-	
-	public ImageIcon getImage() throws Exception{
-		if((iPimg = frameGrabber.grab())!= null) {
+
+	/**
+	 * Uses the openCV library to grab an image of the format IP-image from the
+	 * IP-stream. Converts it into a buffered image that is then set as an image of
+	 * an icon that is then returned
+	 * 
+	 * @author Kayed Mahra
+	 * @version 2019-02-25
+	 * @return icon with an image or null
+	 * @throws Exception
+	 */
+	public ImageIcon getImage() throws Exception {
+		if ((iPimg = frameGrabber.grab()) != null) {
 			img = iPimg.getBufferedImage();
 			icon.setImage(img);
-			System.out.println("pic");
 			return icon;
-		}else {
-			System.out.println("no pic");
 		}
-		
+
 		return null;
 	}
 
