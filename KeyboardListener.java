@@ -95,6 +95,7 @@ public class KeyboardListener extends Observable implements KeyListener{
 		SetUpdated();
 	}
 	
+	
 	private void SetUpdated() {
 		setChanged();
 		notifyObservers(this);

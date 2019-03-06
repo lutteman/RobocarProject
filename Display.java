@@ -25,6 +25,8 @@ public class Display implements Observer {
 	private JButton manual;
 	private JLabel lblLed;
 	private PiClient piclient;
+	// nya classer för att rensa i displayklassen
+	private keyPanel keyP;
 	
 	private PictureModule picMod;
 	private JPanel imagePanel;
@@ -35,6 +37,7 @@ public class Display implements Observer {
 		this.piclient = p;
 		this.key = k;
 		this.picMod = pm;
+		this.keyP = new keyPanel(this.CarV, this.key);
 		loginObj = new Login();
 	}
 
@@ -49,10 +52,9 @@ public class Display implements Observer {
 		frame.getContentPane().add(mainPane);
 
 		frame.setLocationRelativeTo(null);
-		frame.setResizable(true);
 
 		mainPane.add(imagePanel(), BorderLayout.CENTER);
-		mainPane.add(keyPanel(), BorderLayout.SOUTH);
+		mainPane.add(keyP.createKeyPanel(), BorderLayout.SOUTH);
 		mainPane.add(infoPanel1(), BorderLayout.WEST);
 
 		// meny test 1 start
@@ -72,6 +74,8 @@ public class Display implements Observer {
 
 		frame.pack();
 		frame.setVisible(true);
+		frame.setSize(800, 600);
+		frame.setResizable(true);
 		picMod.setupStream();
 		
 	}
@@ -89,60 +93,6 @@ public class Display implements Observer {
 		return imagePanel;
 	}
 
-	/**
-	 * Creates a Panel with GridBagLayout for displaying and handling the steering
-	 * keys
-	 * 
-	 * @return a Panel
-	 */
-	public JPanel keyPanel() {
-
-		JPanel keyPane = new JPanel();
-
-		keyPane.setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
-
-		wheels = new JButton("Forward");
-		c.weightx = 0.5;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 1;
-		c.gridy = 0;
-		keyPane.add(wheels, c);
-		wheels.addActionListener(e -> keyListener(e));
-		
-		manual = key.createButton();
-		c.weightx = 0.5;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 2;
-		c.gridy = 0;
-		keyPane.add(manual, c);
-
-		wheels = new JButton("Back");
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.weightx = 0.5;
-		c.gridx = 1;
-		c.gridy = 1;
-		keyPane.add(wheels, c);
-		wheels.addActionListener(e -> keyListener(e));
-
-		wheels = new JButton("Left");
-		c.weightx = 0.5;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 0;
-		c.gridy = 1;
-		keyPane.add(wheels, c);
-		wheels.addActionListener(e -> keyListener(e));
-
-		wheels = new JButton("Right");
-		c.weightx = 0.5;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 2;
-		c.gridy = 1;
-		keyPane.add(wheels, c);
-		wheels.addActionListener(e -> keyListener(e));
-
-		return keyPane;
-	}
 
 	/**
 	 * Creates a Panel with GridLayout for displaying the information about
@@ -311,6 +261,8 @@ public class Display implements Observer {
 				e.printStackTrace();
 				
 			}
+			rSpeed.setText(Integer.toString(k1.getRightValue()));
+			lSpeed.setText(Integer.toString(k1.getLeftValue()));
 		}
 		else if(arg0 instanceof PictureModule) {
 			PictureModule pm = (PictureModule) arg1;

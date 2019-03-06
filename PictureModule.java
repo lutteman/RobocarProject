@@ -1,4 +1,8 @@
 package car.project;
+/**
+ * @author 
+ * 
+ */
 
 import java.util.Observable;
 
@@ -10,13 +14,11 @@ public class PictureModule extends Observable{
 	
 	public PictureModule() throws Exception {
 		ImageIcon icon = new ImageIcon();
-		System.out.println("pm constructor");
 		
 	}
 	
 	private void updateStream() throws Exception {
 		while(true) {
-			System.out.println("Updatestream");
 			icon = stream.getImage();	
 			setChanged();
 			notifyObservers(this);
